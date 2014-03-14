@@ -51,7 +51,7 @@ def send_message(client, message)
 end
 
 def read_message(client)
-  puts client.write("\000\000\000\000\000\001Z00\002BA\004")
+  puts client.write("\000\000\000\000\000\001Z00\002B0\004")
 end
 
 message = "this is a message"
