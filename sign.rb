@@ -39,6 +39,7 @@ def encode_message(message)
 end
 
 def set_memory(client, message)
+  ['A', 'A', 'L', sprintf("%04X", message.length), "FF00"]
 end
 
 def send_message(client, message)
@@ -51,8 +52,9 @@ def read_message(client)
   puts client.write("\000\000\000\000\000\001Z00\002BA\004")
 end
 
+message = "this is a message"
 initiate_transfer(socket)
-# set_memory(socket, message)
-send_message(socket, "this is a message")
+set_memory(socket, message)
+send_message(socket, message)
 # read_message(socket)
 socket.close
