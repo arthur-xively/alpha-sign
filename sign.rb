@@ -39,7 +39,9 @@ def encode_message(message)
 end
 
 def set_memory(client, message)
-  ['A', 'A', 'L', sprintf("%04X", message.length), "FF00"]
+  pack = ['A', 'A', 'L', sprintf("%04X", message.length), "FF00"].join("")
+  puts pack.inspect
+  puts client.write(pack)
 end
 
 def send_message(client, message)
