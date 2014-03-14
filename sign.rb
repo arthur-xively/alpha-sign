@@ -27,13 +27,9 @@ def encode_body(message)
   ].join("")
 end
 
-def initiate_transfer(client)
-  puts add_header.inspect
-  puts client.write(add_header)
-end
-
 def encode_message(message)
   encoding = ""
+  encoding += add_header
   encoding += encode_body(message)
   encoding += add_footer
 end
@@ -59,8 +55,7 @@ def read_message(client)
 end
 
 message = "this is a message"
-initiate_transfer(socket)
-set_memory(socket, message)
+# set_memory(socket, message)
 # send_message(socket, message)
 read_message(socket)
 socket.close
