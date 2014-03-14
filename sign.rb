@@ -40,5 +40,10 @@ def send_message(client, message)
   puts client.write(encoded_message).inspect
 end
 
-send_message(socket, "message here")
+def read_message(client)
+  puts client.write("\000\000\000\000\000\001Z00BA\004")
+end
+
+# send_message(socket, "message here")
+read_message(socket)
 socket.close
