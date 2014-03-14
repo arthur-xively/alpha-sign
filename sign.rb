@@ -35,7 +35,11 @@ def encode_message(message)
 end
 
 def set_memory(client, message)
-  pack = ['A', 'A', 'L', sprintf("%04X", message.length), "FF00"].join("")
+  pack = ["\000\000\000\000\000\001",
+          "Z00",
+          "\002",
+          "E$",
+          'A', 'A', 'L', sprintf("%04X", message.length), "FF00"].join("")
   puts pack.inspect
   puts client.write(pack)
 end
@@ -55,7 +59,7 @@ def read_message(client)
 end
 
 message = "this is a message"
-# set_memory(socket, message)
-# send_message(socket, message)
-read_message(socket)
+set_memory(socket, message)
+send_message(socket, message)
+# read_message(socket)
 socket.close
