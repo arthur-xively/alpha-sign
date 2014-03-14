@@ -23,15 +23,22 @@ end
 def encode_body(message)
   s = ['A',
    'A',
-   0x1B.chr, '0', 'a', 'this is a message'
+   0x1B.chr, '0', 'a', message
   ].join("")
 end
 
+def initiate_transfer(client)
+  puts add_header.inspect
+  puts client.write(add_header)
+end
+
 def encode_message(message)
-  message = ""
-  message += add_header
-  message += encode_body(message)
-  message += add_footer
+  encoding = ""
+  encoding += encode_body(message)
+  encoding += add_footer
+end
+
+def set_memory(client, message)
 end
 
 def send_message(client, message)
@@ -44,6 +51,8 @@ def read_message(client)
   puts client.write("\000\000\000\000\000\001Z00\002BA\004")
 end
 
-# send_message(socket, "message here")
-read_message(socket)
+initiate_transfer(socket)
+# set_memory(socket, message)
+send_message(socket, "this is a message")
+# read_message(socket)
 socket.close
