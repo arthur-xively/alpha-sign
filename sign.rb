@@ -51,9 +51,11 @@ def send_message(client, message)
 end
 
 def read_message(client)
-  pack = "\000\000\000\000\000\001Z00\002B0\004"
-  puts pack.inspect
-  puts client.write(pack)
+  (0x20..0x7E).each do |byte|
+    pack = "\000\000\000\000\000\001Z00\002#{byte.chr}0\004"
+    puts pack.inspect
+    puts client.write(pack)
+  end
 end
 
 message = "this is a message"
