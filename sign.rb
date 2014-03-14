@@ -52,7 +52,7 @@ end
 
 def read_message(client)
   (0x20..0x7E).each do |byte|
-    pack = "\000\000\000\000\000\001Z00\002#{byte.chr}0\004"
+    pack = "\000\000\000\000\000\001Z00\002B#{byte.chr}\004"
     puts pack.inspect
     puts client.write(pack)
   end
