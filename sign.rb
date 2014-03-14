@@ -51,12 +51,14 @@ def send_message(client, message)
 end
 
 def read_message(client)
-  puts client.write("\000\000\000\000\000\001Z00\002B0\004")
+  pack = "\000\000\000\000\000\001Z00\002B0\004"
+  puts pack.inspect
+  puts client.write(pack)
 end
 
 message = "this is a message"
 initiate_transfer(socket)
 set_memory(socket, message)
-send_message(socket, message)
-# read_message(socket)
+# send_message(socket, message)
+read_message(socket)
 socket.close
