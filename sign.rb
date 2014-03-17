@@ -62,7 +62,7 @@ def read_message(client)
 end
 
 message = "this is a message"
-set_memory(socket, message)
-send_message(socket, message)
+# set_memory(socket, message)
+send_message(socket, "Hello BaZ")
 # read_message(socket)
 socket.close
