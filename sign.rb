@@ -39,7 +39,9 @@ def set_memory(client, message)
           "Z00",
           "\002",
           "E$",
-          'A', 'A', 'L', sprintf("%04X", message.length), "FF00"].join("")
+          'A', 'A',
+          'L', sprintf("%04X", message.length), "FF00"
+          ].join("")
   puts pack.inspect
   puts client.write(pack)
 end
