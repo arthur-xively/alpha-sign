@@ -58,6 +58,12 @@ def send_message(client, message)
   puts client.write(encoded_message).inspect
 end
 
+def send_beep(client)
+  beep_function = "\000\000\000\000\000\001Z00\002E(1\004"
+  puts beep_function.inspect
+  puts client.write(beep_function).inspect
+end
+
 def read_message(client)
   (0x20..0x7E).each do |byte|
     pack = "\000\000\000\000\000\001Z00\002B#{byte.chr}\004"
@@ -67,13 +73,14 @@ def read_message(client)
 end
 
 # Subscribe example
-client = MQTT::Client.new({:username => credentials["username"],
-                           :password => credentials["password"],
-                           :remote_host => "v3mqtt.xively.com"})
-client.connect("1") do |c|
-  c.get('/test') do |topic,message|
-    send_message(socket, message)
-  end
-end
+# client = MQTT::Client.new({:username => credentials["username"],
+#                            :password => credentials["password"],
+#                            :remote_host => "v3mqtt.xively.com"})
+# client.connect("1") do |c|
+#   c.get('/test') do |topic,message|
+#     send_message(socket, message)
+#   end
+# end
 
+send_beep(socket)
 socket.close
