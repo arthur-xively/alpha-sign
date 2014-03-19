@@ -1,7 +1,12 @@
+require 'rubygems'
 require 'socket'               # Get sockets from stdlib
+require 'mqtt'
+require 'yaml'
 
 socket = TCPSocket.new '192.168.60.8', 3001
+credentials = YAML::load(File.read("mqtt.yml"))
 
+puts credentials.inspect
 class String
   def ord
     bytes.to_a.first
@@ -61,8 +66,14 @@ def read_message(client)
   end
 end
 
-message = "this is a message"
-# set_memory(socket, message)
-send_message(socket, "Hello BaZ")
-# read_message(socket)
+# Subscribe example
+client = MQTT::Client.new({:username => credentials["username"],
+                           :password => credentials["password"],
+                           :remote_host => "v3mqtt.xively.com"})
+client.connect("1") do |c|
+  c.get('/test') do |topic,message|
+    send_message(socket, message)
+  end
+end
+
 socket.close
