@@ -3,10 +3,13 @@ require 'socket'               # Get sockets from stdlib
 require 'mqtt'
 require 'yaml'
 
-socket = TCPSocket.new '192.168.60.8', 3001
-credentials = YAML::load(File.read("mqtt.yml"))
 
-puts credentials.inspect
+mqtt_config = YAML::load(File.read("mqtt.yml"))
+sign_config = YAML::load(File.read("sign.yml"))
+
+socket = TCPSocket.new sign_config["host"], sign_config["port"]
+
+puts mqtt_config.inspect
 class String
   def ord
     bytes.to_a.first
@@ -39,19 +42,6 @@ def encode_message(message)
   encoding += add_footer
 end
 
-def set_memory(client, message)
-  pack = ["\000\000\000\000\000\001",
-          "Z00",
-          "\002",
-          "E$",
-          'A', 'A',
-          # 'L', sprintf("%04X", message.length), "FF00"
-          "Hello BaZ"
-          ].join("")
-  puts pack.inspect
-  puts client.write(pack)
-end
-
 def send_message(client, message)
   encoded_message = encode_message(message)
   puts encoded_message.inspect
@@ -67,11 +57,11 @@ def read_message(client)
 end
 
 # Subscribe example
-client = MQTT::Client.new({:username => credentials["username"],
-                           :password => credentials["password"],
-                           :remote_host => "v3mqtt.xively.com"})
+client = MQTT::Client.new({:username => mqtt_config["username"],
+                           :password => mqtt_config["password"],
+                           :remote_host => mqtt_config["host"]})
 client.connect("1") do |c|
-  c.get('/test') do |topic,message|
+  c.get(mqtt_config["topic"]) do |topic,message|
     send_message(socket, message)
   end
 end
