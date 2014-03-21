@@ -3,13 +3,11 @@ require 'socket'               # Get sockets from stdlib
 require 'mqtt'
 require 'yaml'
 
-
-mqtt_config = YAML::load(File.read("mqtt.yml"))
-sign_config = YAML::load(File.read("sign.yml"))
+mqtt_config = YAML::load(File.read("config/mqtt.yml"))
+sign_config = YAML::load(File.read("config/sign.yml"))
 
 socket = TCPSocket.new sign_config["host"], sign_config["port"]
 
-puts mqtt_config.inspect
 class String
   def ord
     bytes.to_a.first
@@ -45,14 +43,13 @@ end
 def send_message(client, message)
   encoded_message = encode_message(message)
   puts encoded_message.inspect
-  puts client.write(encoded_message).inspect
+  client.write(encoded_message)
 end
 
 def read_message(client)
   (0x20..0x7E).each do |byte|
     pack = "\000\000\000\000\000\001Z00\002B#{byte.chr}\004"
-    puts pack.inspect
-    puts client.write(pack)
+    client.write(pack)
   end
 end
 
@@ -60,9 +57,13 @@ end
 client = MQTT::Client.new({:username => mqtt_config["username"],
                            :password => mqtt_config["password"],
                            :remote_host => mqtt_config["host"]})
+
+messages = {}
 client.connect("1") do |c|
-  c.get(mqtt_config["topic"]) do |topic,message|
-    send_message(socket, message)
+  c.get(mqtt_config["topics"]) do |topic,message|
+    messages[topic] = message
+    m = messages.values.join("            ")
+    send_message(socket, m)
   end
 end
 
